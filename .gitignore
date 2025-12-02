@@ -7,11 +7,10 @@ node_modules/
 /playwright/.cache/
 /playwright/.auth/
 
-node_modules/
 screenshots/
-reports/
-playwright-report/
 test-results/
 .env
 *.log
 .DS_Store
+
+.commands.txt
