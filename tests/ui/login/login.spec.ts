@@ -9,22 +9,11 @@ test.describe('Login Page', () => {
     await expect(pages.loginPage.loginForm).toBeVisible();
   });
 
-//   test('should login with valid credentials', async ({ page }) => {
-//     await page.fill('#username', 'validUser');
-//     await page.fill('#password', 'validPassword');
-//     await page.click('#login-button');
-
-//     const dashboard = page.locator('#dashboard');
-//     await expect(dashboard).toBeVisible();
-//   });
-
-//   test('should show error with invalid credentials', async ({ page }) => {
-//     await page.fill('#username', 'invalidUser');
-//     await page.fill('#password', 'invalidPassword');
-//     await page.click('#login-button');
-
-//     const errorMessage = page.locator('#error-message');
-//     await expect(errorMessage).toBeVisible();
-//     await expect(errorMessage).toHaveText('Invalid username or password.');
-//   });
+  test('Should display error message.', async ({ pages }) => {
+    await pages.loginPage.navigate();
+    await pages.welcomePopup.dismiss();
+    await pages.loginPage.fillLoginFormAndLogin({ email: 'testuser', password: 'wrongpassword' });
+    await expect(pages.loginPage.loginForm).toBeVisible();
+    await expect(pages.loginPage.errorMessage).toHaveText("Invalid email or password.");
+  });
 });

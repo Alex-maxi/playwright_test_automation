@@ -10,11 +10,11 @@ class LoginPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.usernameInput = page.locator('#username');
+    this.usernameInput = page.getByLabel('Email');
     this.passwordInput = page.locator('#password');
-    this.loginButton = page.locator('#login-button');
+    this.loginButton = page.locator('#loginButton');
     this.loginForm = page.locator('#login-form');
-    this.errorMessage = page.locator('#error-message');
+    this.errorMessage = page.locator('.error');
   }
 
   async navigate() {
@@ -22,14 +22,26 @@ class LoginPage extends BasePage {
   }
 
   async isLoginFormVisible() {
-    return await this.loginForm.isVisible();
+    return await this.isVisible(this.loginForm);
   }
 
-  async login(username: string, password: string) {
-    await this.usernameInput.fill(username);
-    await this.passwordInput.fill(password);
-    await this.loginButton.click();
+  async fillLoginForm({ email, password }: { email: string; password: string }) {
+    await this.typeText(this.usernameInput, email);
+    await this.typeText(this.passwordInput, password);
+    return this;
   }
+
+  async fillLoginFormAndLogin({ email, password }: { email: string; password: string }) {
+    await this.fillLoginForm({ email, password })
+    await this.waitForElementVisible(this.loginButton)
+    await this.tapLoginButton();
+    return this;
+  }
+
+  async tapLoginButton() {
+    await this.click(this.loginButton);
+  }
+
 
   async getErrorMessageText() {
     return await this.errorMessage.innerText();
