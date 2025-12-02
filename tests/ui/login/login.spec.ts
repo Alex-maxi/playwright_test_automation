@@ -14,6 +14,6 @@ test.describe('Login Page', () => {
     await pages.welcomePopup.dismiss();
     await pages.loginPage.fillLoginFormAndLogin({ email: 'testuser', password: 'wrongpassword' });
     await expect(pages.loginPage.loginForm).toBeVisible();
-    await expect(pages.loginPage.errorMessage).toHaveText("Invalid email or password.");
+    await expect(pages.loginPage.errorMessage).toHaveText(pages.loginPage.getExpectedData().invalidCredentials);
   });
 });

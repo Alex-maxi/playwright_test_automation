@@ -46,6 +46,16 @@ class LoginPage extends BasePage {
   async getErrorMessageText() {
     return await this.errorMessage.innerText();
   }
+
+  getExpectedData() {
+    return {
+      invalidCredentials: "Invalid email or password.",
+      emailRequired: "Please provide an email address.",
+      passwordRequired: "Please provide a password.",
+      snackBarMessage: "Login successful"
+    };
+  }
+
 }
 
 export { LoginPage };
