@@ -8,6 +8,7 @@ class BasePage {
   }
 
   async waitForElementVisible(locator: Locator, timeout = 5000) {
+    await locator.waitFor({ state: 'attached', timeout });
     await locator.waitFor({ state: 'visible', timeout });
   }
 
@@ -33,6 +34,17 @@ class BasePage {
 
   async waitForTimeout(timeout: number) {
     await this.page.waitForTimeout(timeout);
+  }
+
+  async getText(locator: Locator) {
+    try {
+      await this.waitForElementVisible(locator);
+      let text = await locator.textContent();
+      text === "" ? await locator.innerText() : ""
+      return text;
+    } catch {
+        return "";
+      }
   }
 
   async clickOutside() {

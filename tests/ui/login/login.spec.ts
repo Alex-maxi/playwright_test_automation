@@ -1,6 +1,5 @@
 import { expect } from '@playwright/test';
 import { test } from '../../../core/fixtures/pages.fixture';
-import { PageFactory } from '../../../core/pageFactory';
 
 
 test.describe('Login Page', () => {
