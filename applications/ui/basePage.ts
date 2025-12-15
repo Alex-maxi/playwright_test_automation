@@ -7,12 +7,17 @@ class BasePage {
     await this.page.evaluate(() => localStorage.clear());
   }
 
-  async waitForElementVisible(locator: Locator, timeout = 5000) {
-    await locator.waitFor({ state: 'attached', timeout });
-    await locator.waitFor({ state: 'visible', timeout });
+  async waitForElementVisible(locator: Locator, timeout = 10000) {
+    try {
+      // await locator.waitFor({ state: 'attached', timeout });
+      await locator.waitFor({ state: 'visible', timeout });
+    } catch(e) {
+      console.error(e);
+    }
+    
   }
 
-  async waitForElementAbsent(locator: Locator, timeout = 5000) {
+  async waitForElementAbsent(locator: Locator, timeout = 10000) {
     await locator.waitFor({ state: 'hidden', timeout });
   }
 

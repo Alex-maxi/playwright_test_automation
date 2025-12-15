@@ -7,7 +7,6 @@ class WelcomePopup extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    // this.dismissButtonSelector = page.locator('[aria-label="Close Welcome Banner"]');
     this.dismissButtonSelector = page.locator('button', { hasText: 'Dismiss' });
   }
 

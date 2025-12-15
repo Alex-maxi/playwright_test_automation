@@ -1,5 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 import { BasePage } from "../basePage";
+import { I18nHelper } from "../../../core/translationHelper";
 
 class LoginPage extends BasePage {
   readonly usernameInput: Locator;
@@ -7,6 +8,8 @@ class LoginPage extends BasePage {
   readonly loginButton: Locator;
   readonly loginForm: Locator;
   readonly errorMessage: Locator;
+  readonly emailError: Locator;
+  readonly passwordError: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -15,6 +18,9 @@ class LoginPage extends BasePage {
     this.loginButton = page.locator('#loginButton');
     this.loginForm = page.locator('#login-form');
     this.errorMessage = page.locator('.error');
+        // Validation messages
+    this.emailError = this.page.locator('mat-form-field:has(input#email) mat-error');
+    this.passwordError = this.page.locator('mat-form-field:has(input#password) mat-error');
   }
 
   async navigate() {
@@ -28,6 +34,7 @@ class LoginPage extends BasePage {
   async fillLoginForm({ email, password }: { email: string; password: string }) {
     await this.typeText(this.usernameInput, email);
     await this.typeText(this.passwordInput, password);
+    this.clickOutside();
     return this;
   }
 
@@ -50,9 +57,8 @@ class LoginPage extends BasePage {
   getExpectedData() {
     return {
       invalidCredentials: "Invalid email or password.",
-      emailRequired: "Please provide an email address.",
-      passwordRequired: "Please provide a password.",
-      snackBarMessage: "Login successful"
+      emailRequired: I18nHelper.getTranslation("MANDATORY_EMAIL"),
+      passwordRequired: I18nHelper.getTranslation("MANDATORY_PASSWORD")
     };
   }
 

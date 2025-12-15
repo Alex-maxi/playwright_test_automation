@@ -1,5 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 import { BasePage } from "../basePage";
+import { I18nHelper } from "../../../core/translationHelper";
 
 class SnackbarPage extends BasePage {
     readonly snackbar: Locator;
@@ -40,9 +41,9 @@ class SnackbarPage extends BasePage {
 
     getExpectedData() {
         return {
-        languageText: " Language has been changed to English",
-        registrationText: " Registration completed successfully. You can now log in.",
-        buttonText: " Force page reload ",
+        languageText: I18nHelper.getTranslation("NOTIFICATION_LANGUAGE_CHANGE") || " Language has been changed to English",
+        registrationText: I18nHelper.getTranslation("CONFIRM_REGISTER"),
+        buttonText: I18nHelper.getTranslation("BTN_FORCE_RELOAD") || " Force page reload ",
         };
     }
 
