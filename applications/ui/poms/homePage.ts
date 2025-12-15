@@ -69,7 +69,7 @@ class HomePage extends BasePage {
 
     // --- COOKIE CONSENT ---
     this.cookieConsentDialog = page.locator('#cookieconsent');
-    this.dismissCookieButton = this.cookieConsentDialog.locator('button').filter({ hasText: 'Me want it!' });
+    this.dismissCookieButton = page.getByText('Me want it!');
 
     // --- SNACKBAR ---
     this.snackbar = page.locator('simple-snack-bar');
@@ -78,16 +78,6 @@ class HomePage extends BasePage {
 
   async navigate() {
     await this.page.goto('/#/search');
-    await this.dismissCookieConsent();
-  }
-
-  async dismissCookieConsent() {
-    try {
-      await this.dismissCookieButton.click({ force: true, timeout: 5000 });
-      await this.cookieConsentDialog.waitFor({ state: 'hidden', timeout: 5000 });
-    } catch (error) {
-      console.log('Cookie consent dialog not found or already dismissed');
-    }
   }
 
   async searchProduct(text: string) {
@@ -134,12 +124,6 @@ class HomePage extends BasePage {
 
   async waitForSnackbar() {
     await this.snackbar.waitFor({ state: 'visible' });
-  }
-
-  async waitForSnackbarText(expected: string) {
-    await this.waitForSnackbar();
-    await this.snackbarText.waitFor({ state: 'visible' });
-    return await this.snackbarText.textContent();
   }
 }
 

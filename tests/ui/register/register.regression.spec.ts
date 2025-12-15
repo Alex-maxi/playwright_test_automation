@@ -2,8 +2,15 @@ import { expect } from '@playwright/test';
 import { test } from '../../../core/fixtures/pages.fixture';
 
 test.beforeEach(async ({ pages }) => {
+  await pages.getPage().context().addCookies([
+      {
+        name: 'welcomebanner_status',
+        value: 'dismiss',
+        domain: 'localhost',
+        path: '/'
+      }
+    ]);
   await pages.registerPage.navigate();
-  await pages.welcomePopup.dismiss();
 });
 
 test.describe('Register Page @regression', () => {

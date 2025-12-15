@@ -3,8 +3,15 @@ import { test } from '../../../core/fixtures/pages.fixture';
 
 
 test.beforeEach(async ({ pages }) => {
+  await pages.getPage().context().addCookies([
+      {
+        name: 'welcomebanner_status',
+        value: 'dismiss',
+        domain: 'localhost',
+        path: '/'
+      }
+    ]);
   await pages.loginPage.navigate();
-  await pages.welcomePopup.dismiss();
 });
 
 test.describe('Login Page', () => {

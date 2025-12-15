@@ -18,7 +18,7 @@ class BasePage {
   }
 
   async waitForElementAbsent(locator: Locator, timeout = 10000) {
-    await locator.waitFor({ state: 'hidden', timeout });
+    await locator.waitFor({ state: 'detached', timeout });
   }
 
   async click(locator: Locator) {

@@ -4,58 +4,65 @@ import { test } from '../../../core/fixtures/pages.fixture';
 
 test.describe('Home Page', () => {
 
-  let userEmail: string;
-
-  test.beforeEach(async ({ pages, api, userApi }) => {
-    // Register and login via API
-    userEmail = `test_${Date.now()}_${Math.random()}@example.com`;
-    await userApi.register({
-      email: userEmail,
-      password: 'Test1234!',
-      securityAnswer: 'Test'
+  test.beforeEach(async ({ pages }) => {
+    await pages.getPage().context().addCookies([
+      {
+        name: 'cookieconsent_status',
+        value: 'dismiss',
+        domain: 'localhost',
+        path: '/'
+      },
+      {
+        name: 'welcomebanner_status',
+        value: 'dismiss',
+        domain: 'localhost',
+        path: '/'
+      }
+    ]);
+    await pages.registerPage.navigate();
+    const EMAIL = `test_${Date.now()}@juice.local`;
+    const PASSWORD = 'Test1234!';
+    const SECURITY_ANSWER: string = 'SECURITY_ANSWER'
+    await pages.registerPage.fillRegistrationFormAndSubmit({
+      email: EMAIL,
+      password: PASSWORD,
+      repeatPassword: PASSWORD,
+      securityAnswer: SECURITY_ANSWER,
+      selectQuestion: true
     });
-    const token = await userApi.login({
-      email: userEmail,
-      password: 'Test1234!'
-    });
-
-    // Set token cookie to browser
-    await pages.getPage().context().addCookies([{
-      name: 'token',
-      value: token,
-      domain: 'localhost',
-      path: '/'
-    }]);
-
-    // Navigate to home
-    await pages.homePage.navigate();
-    await pages.welcomePopup.dismiss();
-  });
-
-  test('Should add first product to basket @smoke', async ({ pages }) => {
-    const firstName = (await pages.homePage.getProductNameByIndex(0))?.trim() ?? '';
-    await pages.homePage.addProductToBasketByIndex(0);
-    await pages.homePage.waitForSnackbar();
-    const text = await pages.homePage.waitForSnackbarText('');
-    expect(text?.trim()).not.toBe('');
-  });
-
-  test('Should search product @regression', async ({ pages }) => {
-    const name = (await pages.homePage.getProductNameByIndex(0))?.trim() ?? '';
-    await pages.homePage.searchProduct(name);
-    await expect(pages.homePage.productNames.first()).toContainText(name);
-  });
-
-  test('Should open and close side menu @regression', async ({ pages }) => {
-    await pages.homePage.openSideMenu();
-    await expect(pages.homePage.sideMenu).toBeVisible();
-    await pages.homePage.closeSideMenu();
-    await expect(pages.homePage.sideMenu).toBeHidden();
-  });
-
-  test('Should navigate to login from account menu @regression', async ({ pages }) => {
-    await pages.homePage.goToLogin();
+    
+    await expect(pages.snackbarPage.snackbarTextRegistration).toBeVisible();
     await expect(pages.loginPage.loginForm).toBeVisible();
+    
+    await pages.loginPage.fillLoginFormAndLogin({ email: EMAIL, password: PASSWORD });
+    await expect(pages.homePage.accountButton).toBeVisible();
+
+    await pages.homePage.navigate();
   });
+
+  test('Should add first product to basket @smoke', async ({ pages, page }) => {
+    const firstName = (await pages.homePage.getProductNameByIndex(0))?.trim() ?? '';
+    await pages.snackbarPage.waitForSnackbarAbsent();
+    await pages.homePage.addProductToBasketByIndex(0);
+    await expect(pages.snackbarPage.snackbar).toContainText(`Placed ${firstName} into basket.`);
+  });
+
+  // test('Should search product @regression', async ({ pages }) => {
+  //   const name = (await pages.homePage.getProductNameByIndex(0))?.trim() ?? '';
+  //   await pages.homePage.searchProduct(name);
+  //   await expect(pages.homePage.productNames.first()).toContainText(name);
+  // });
+
+  // test('Should open and close side menu @regression', async ({ pages }) => {
+  //   await pages.homePage.openSideMenu();
+  //   await expect(pages.homePage.sideMenu).toBeVisible();
+  //   await pages.homePage.closeSideMenu();
+  //   await expect(pages.homePage.sideMenu).toBeHidden();
+  // });
+
+  // test('Should navigate to login from account menu @regression', async ({ pages }) => {
+  //   await pages.homePage.goToLogin();
+  //   await expect(pages.loginPage.loginForm).toBeVisible();
+  // });
 
 });

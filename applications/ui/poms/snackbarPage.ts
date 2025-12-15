@@ -26,6 +26,14 @@ class SnackbarPage extends BasePage {
         await this.waitForElementVisible(this.snackbarTextRegistration)
     }
 
+    async waitForSnackbarDisplayed() {
+        await this.waitForElementVisible(this.snackbar)
+    }
+
+    async waitForSnackbarAbsent() {
+        await this.waitForElementAbsent(this.snackbar)
+    }
+
     async waitForRegistrationSnackbarAbsent() {
         await this.waitForElementAbsent(this.snackbarTextRegistration)
     }

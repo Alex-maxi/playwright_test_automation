@@ -39,7 +39,7 @@ export class UserApiHelper {
     return await response.json();
   }
 
-  async login(credentials: LoginCredentials): Promise<JSON> {
+  async login(credentials: LoginCredentials): Promise<any> {
     const response = await this.apiClient.post('/rest/user/login', {
       email: credentials.email,
       password: credentials.password
