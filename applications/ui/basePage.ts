@@ -55,10 +55,11 @@ class BasePage {
     try {
       await this.page.mouse.click(10, 10);
     } catch (e) {
+      if (this.page.isClosed()) return this;
       await this.page.locator('body').click({ position: { x: 0, y: 0 } });
     }
     return this;
   }
 }
 
-export { BasePage };    
+export { BasePage };

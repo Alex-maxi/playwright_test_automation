@@ -101,7 +101,7 @@ class RegisterPage extends BasePage {
     if (securityAnswer !== undefined) {
       await this.typeText(this.securityAnswerField, securityAnswer);
     }
-    this.clickOutside();
+    await this.clickOutside();
     return this;
   }
 
