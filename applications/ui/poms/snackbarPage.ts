@@ -10,12 +10,12 @@ class SnackbarPage extends BasePage {
 
     constructor(page: Page) {
         super(page);
-        this.snackbar = page.locator('simple-snack-bar [matsnackbarlabel]');
-        this.snackbarTextLanguage = page.locator('simple-snack-bar [matsnackbarlabel]',
-            {hasText: " Language has been changed to English"});
-        this.snackbarTextRegistration = page.locator('simple-snack-bar [matsnackbarlabel]',
-            {hasText: " Registration completed successfully. You can now log in."});
-        this.snackbarButton = page.locator('mat-snack-bar-container simple-snack-bar [matsnackbaractions] button');
+        this.snackbar = page.locator('simple-snack-bar');
+        this.snackbarTextLanguage = page.locator('simple-snack-bar',
+            {hasText: "Language has been changed to English"});
+        this.snackbarTextRegistration = page.locator('simple-snack-bar',
+            {hasText: "Registration completed successfully"});
+        this.snackbarButton = page.locator('simple-snack-bar button');
     }
 
     async tapSnackbarButton() {

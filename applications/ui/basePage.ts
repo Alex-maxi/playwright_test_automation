@@ -4,7 +4,6 @@ class BasePage {
 
   async navigateTo(url: string): Promise<void> {
     await this.page.goto(url);
-    await this.page.evaluate(() => localStorage.clear());
   }
 
   async waitForElementVisible(locator: Locator, timeout = 10000) {
@@ -21,8 +20,8 @@ class BasePage {
     await locator.waitFor({ state: 'detached', timeout });
   }
 
-  async click(locator: Locator) {
-    await locator.click();
+  async click(locator: Locator, isForce: boolean = false) {
+    await locator.click({ force: isForce });
   }
 
   async typeText(locator: Locator, text: string) {

@@ -1,0 +1,35 @@
+
+services:
+  juice-shop:
+    image: bkimminich/juice-shop
+    container_name: juice-shop
+    ports:
+      - "3000:3000"
+    networks:
+      - testnet
+    restart: "no"
+
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: playwright_tests
+    depends_on:
+      - juice-shop
+    networks:
+      - testnet
+    environment:
+      - BASE_URL_API_DEV=http://juice-shop:3000
+      - CI=true
+    command: >
+      sh -c "npx wait-on http://juice-shop:3000 --timeout 10000
+      && npm run test:all"
+    restart: "no"
+    volumes:
+      - ./screenshots:/usr/src/app/screenshots
+      - ./test-results:/usr/src/app/test-results
+      - ./playwright-report:/usr/src/app/playwright-report
+
+networks:
+  testnet:
+    driver: bridge

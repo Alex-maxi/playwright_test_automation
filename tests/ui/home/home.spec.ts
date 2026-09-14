@@ -2,6 +2,8 @@ import { expect } from '@playwright/test';
 import { test } from '../../../core/fixtures/pages.fixture';
 
 
+const baseUrl = process.env.BASE_URL_API_DEV || 'http://127.0.0.1:3000';
+
 test.describe('Home Page', () => {
 
   test.beforeEach(async ({ pages }) => {
@@ -9,14 +11,12 @@ test.describe('Home Page', () => {
       {
         name: 'cookieconsent_status',
         value: 'dismiss',
-        domain: 'localhost',
-        path: '/'
+        url: baseUrl
       },
       {
         name: 'welcomebanner_status',
         value: 'dismiss',
-        domain: 'localhost',
-        path: '/'
+        url: baseUrl
       }
     ]);
     await pages.registerPage.navigate();

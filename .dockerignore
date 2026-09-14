@@ -1,0 +1,14 @@
+node_modules/
+.git/
+.github/
+test-results/
+playwright-report/
+screenshots/
+blob-report/
+playwright/.cache/
+playwright/.auth/
+.DS_Store
+*.log
+.env
+.commands.txt
+

@@ -25,6 +25,8 @@ class RegisterPage extends BasePage {
   readonly securityQuestionHint: Locator;
   readonly securityQuestionHintIcon: Locator;
   readonly securityQuestionHintText: Locator;
+  readonly snackBar: Locator;
+  readonly forcePageReloadButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -39,7 +41,7 @@ class RegisterPage extends BasePage {
     this.passwordAdviceText = this.passwordAdvice.locator('span');
     this.passwordAdviceIcon = this.passwordAdvice.locator('mat-icon');
     this.repeatPasswordField = this.page.locator('#repeatPasswordControl');
-    this.securityQuestionDropdown = this.page.getByRole('combobox');
+    this.securityQuestionDropdown = this.page.getByRole('combobox', { name: 'Security Question' });
     this.securityQuestions = this.page.locator('mat-option');
     this.securityQuestionHint = this.page.locator('mat-form-field:has([name="securityQuestion"]) mat-hint');
     this.securityQuestionHintIcon = this.securityQuestionHint.locator("svg");
@@ -55,6 +57,8 @@ class RegisterPage extends BasePage {
     this.passwordHint = this.page.locator('mat-form-field:has(#passwordControl) mat-hint').first();
     this.repeatPasswordError = this.page.locator('mat-form-field:has(input#repeatPasswordControl) mat-error');
     this.securityAnswerError = this.page.locator('mat-form-field:has(input#securityAnswerControl) mat-error');
+    this.snackBar = this.page.locator('simple-snack-bar');
+    this.forcePageReloadButton = this.snackBar.getByRole('button', { name: 'Force page reload' });
   }
 
   async navigate() {
@@ -117,8 +121,26 @@ class RegisterPage extends BasePage {
     return this;
   }
 
+  async waitForSnackBarHidden(timeout = 10000) {
+    await this.snackBar.waitFor({ state: 'hidden', timeout }).catch(() => { /* снекбар опційний */ });
+    return this;
+  }
+
+  async dismissSnackBar() {
+    if (await this.snackBar.isVisible()) {
+      await this.forcePageReloadButton.click();
+      await this.waitForElementAbsent(this.snackBar);
+    }
+    return this;
+  }
+
   async clickSecurityQuestionDropdown() {
-    await this.click(this.securityQuestionDropdown);
+    // await this.dismissSnackBar();
+    await this.page.waitForLoadState('networkidle');
+    await this.securityQuestionDropdown.click({ force: true });
+    // await this.securityQuestionDropdown.focus();
+    // await this.page.keyboard.press('Space');
+    await this.waitForElementVisible(this.securityQuestions);
   }
 
   async submit() {

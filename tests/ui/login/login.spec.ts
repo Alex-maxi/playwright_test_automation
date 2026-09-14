@@ -2,13 +2,14 @@ import { expect } from '@playwright/test';
 import { test } from '../../../core/fixtures/pages.fixture';
 
 
+const baseUrl = process.env.BASE_URL_API_DEV || 'http://127.0.0.1:3000';
+
 test.beforeEach(async ({ pages }) => {
   await pages.getPage().context().addCookies([
       {
         name: 'welcomebanner_status',
         value: 'dismiss',
-        domain: 'localhost',
-        path: '/'
+        url: baseUrl
       }
     ]);
   await pages.loginPage.navigate();
@@ -38,8 +39,9 @@ test.describe('Login Page', () => {
   });
 
   test('Should display error message. @regression', async ({ pages }) => {
-    await pages.loginPage.fillLoginFormAndLogin({ email: 'testuser', password: 'wrongpassword' });
+    await pages.loginPage.fillLoginForm({ email: 'testuser', password: 'wrongpassword' });
     await expect(pages.loginPage.loginButton).toBeEnabled();
+    await pages.loginPage.tapLoginButton();
     await expect(pages.loginPage.errorMessage).toHaveText(pages.loginPage.getExpectedData().invalidCredentials);
   });
 
@@ -56,7 +58,8 @@ test.describe('Login Page', () => {
   });
 
   test('Should show invalid credentials for bad email format. @regression', async ({ pages }) => {
-    await pages.loginPage.fillLoginFormAndLogin({ email: 'notanemail', password: 'wrongpassword' });
+    await pages.loginPage.fillLoginForm({ email: 'notanemail', password: 'wrongpassword' });
+    await pages.loginPage.tapLoginButton();
     await expect(pages.loginPage.errorMessage).toContainText(pages.loginPage.getExpectedData().invalidCredentials);
   });
 });

@@ -1,13 +1,14 @@
 import { expect } from '@playwright/test';
 import { test } from '../../../core/fixtures/pages.fixture';
 
+const baseUrl = process.env.BASE_URL_API_DEV || 'http://127.0.0.1:3000';
+
 test.beforeEach(async ({ pages }) => {
   await pages.getPage().context().addCookies([
       {
         name: 'welcomebanner_status',
         value: 'dismiss',
-        domain: 'localhost',
-        path: '/'
+        url: baseUrl
       }
     ]);
   await pages.registerPage.navigate();
@@ -60,6 +61,8 @@ test.describe('Register Page @regression', () => {
     await pages.registerPage.clickSecurityQuestionDropdown();
 
     await expect(pages.registerPage.dropDown).toBeVisible();
+    await expect(pages.registerPage.securityQuestions.first()).toBeVisible();
+    expect(await pages.registerPage.securityQuestions.count()).toBeGreaterThan(0);
   });
 
   test('Password advices with icons.', async ({ pages }) => {

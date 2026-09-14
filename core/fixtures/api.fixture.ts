@@ -10,7 +10,7 @@ type ApiFixture = {
 export const test = base.extend<ApiFixture>({
   api: async ({ playwright }, use) => {
     const requestContext = await playwright.request.newContext({
-      baseURL: 'http://localhost:3000', // Adjust base URL as needed
+      baseURL: process.env.BASE_URL_API_DEV ?? 'http://localhost:3000',
     });
     const client = new ApiClient(requestContext);
     await use(client);
