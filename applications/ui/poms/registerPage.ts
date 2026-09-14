@@ -27,6 +27,7 @@ class RegisterPage extends BasePage {
   readonly securityQuestionHintText: Locator;
   readonly snackBar: Locator;
   readonly forcePageReloadButton: Locator;
+  readonly securityQuestionsListbox: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -42,7 +43,8 @@ class RegisterPage extends BasePage {
     this.passwordAdviceIcon = this.passwordAdvice.locator('mat-icon');
     this.repeatPasswordField = this.page.locator('#repeatPasswordControl');
     this.securityQuestionDropdown = this.page.getByRole('combobox', { name: 'Security Question' });
-    this.securityQuestions = this.page.locator('mat-option');
+    this.securityQuestions = this.page.getByRole('option');
+    this.securityQuestionsListbox = this.page.getByRole('listbox', { name: 'Selection list for the security question' });
     this.securityQuestionHint = this.page.locator('mat-form-field:has([name="securityQuestion"]) mat-hint');
     this.securityQuestionHintIcon = this.securityQuestionHint.locator("svg");
     this.securityQuestionHintText = this.securityQuestionHint.locator("em");
@@ -140,7 +142,7 @@ class RegisterPage extends BasePage {
     await this.securityQuestionDropdown.click({ force: true });
     // await this.securityQuestionDropdown.focus();
     // await this.page.keyboard.press('Space');
-    await this.waitForElementVisible(this.securityQuestions);
+    await this.waitForElementVisible(this.securityQuestionsListbox);
   }
 
   async submit() {
